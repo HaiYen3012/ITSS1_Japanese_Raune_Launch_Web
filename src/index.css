@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Food-themed color palette */
+    --background: 45 40% 98%;
+    --foreground: 20 14% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 20%;
+
+    /* Tangerine orange - main brand color */
+    --primary: 24 100% 54%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Cream - secondary surfaces */
+    --secondary: 45 100% 92%;
+    --secondary-foreground: 20 14% 20%;
+
+    /* Muted warm tones */
+    --muted: 40 30% 94%;
+    --muted-foreground: 20 10% 45%;
+
+    /* Fresh green accent */
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 24 100% 54%;
+
+    --radius: 0.75rem;
+
+    /* Gradient tokens */
+    --gradient-hero: linear-gradient(135deg, hsl(24 100% 92%) 0%, hsl(45 100% 88%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(45 40% 98%) 100%);
+    
+    /* Shadow tokens */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+    /* Animation tokens */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "id": 1,
+    "restaurantId": 1,
+    "name": "Phở Bò",
+    "category": "Vietnamese",
+    "price": 50000,
+    "rating": 4.5,
+    "reviews": 145,
+    "photo": "https://images.unsplash.com/photo-1591814468924-caf88d1232e1?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 2,
+    "restaurantId": 1,
+    "name": "Phở Gà",
+    "category": "Vietnamese",
+    "price": 45000,
+    "rating": 4.4,
+    "reviews": 98,
+    "photo": "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 3,
+    "restaurantId": 2,
+    "name": "Bún Chả Set",
+    "category": "Vietnamese",
+    "price": 60000,
+    "rating": 4.8,
+    "reviews": 234,
+    "photo": "https://images.unsplash.com/photo-1559314809-0d155014e29e?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 4,
+    "restaurantId": 4,
+    "name": "Margherita Pizza",
+    "category": "Western",
+    "price": 180000,
+    "rating": 4.7,
+    "reviews": 312,
+    "photo": "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 5,
+    "restaurantId": 4,
+    "name": "Burrata Pizza",
+    "category": "Western",
+    "price": 220000,
+    "rating": 4.9,
+    "reviews": 267,
+    "photo": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 6,
+    "restaurantId": 6,
+    "name": "Bánh Mì Thịt",
+    "category": "Vietnamese",
+    "price": 25000,
+    "rating": 4.6,
+    "reviews": 423,
+    "photo": "https://images.unsplash.com/photo-1626266061368-46ab34f99f0e?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 7,
+    "restaurantId": 8,
+    "name": "Gỏi Cuốn",
+    "category": "Vietnamese",
+    "price": 35000,
+    "rating": 4.5,
+    "reviews": 189,
+    "photo": "https://images.unsplash.com/photo-1593030668946-d290b4c2bea7?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 8,
+    "restaurantId": 8,
+    "name": "Nem Rán",
+    "category": "Vietnamese",
+    "price": 40000,
+    "rating": 4.4,
+    "reviews": 156,
+    "photo": "https://images.unsplash.com/photo-1552611052-33e04de081de?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 9,
+    "restaurantId": 11,
+    "name": "Gogi Set for 2",
+    "category": "Asian",
+    "price": 350000,
+    "rating": 4.6,
+    "reviews": 234,
+    "photo": "https://images.unsplash.com/photo-1529543544-69b3c3c538c6?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 10,
+    "restaurantId": 12,
+    "name": "Bún Bò Nam Bộ",
+    "category": "Vietnamese",
+    "price": 45000,
+    "rating": 4.7,
+    "reviews": 298,
+    "photo": "https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 11,
+    "restaurantId": 15,
+    "name": "Chả Cá",
+    "category": "Vietnamese",
+    "price": 120000,
+    "rating": 4.5,
+    "reviews": 187,
+    "photo": "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 12,
+    "restaurantId": 18,
+    "name": "Sushi Set A",
+    "category": "Asian",
+    "price": 280000,
+    "rating": 4.8,
+    "reviews": 345,
+    "photo": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 13,
+    "restaurantId": 20,
+    "name": "Phở Bò Tái",
+    "category": "Vietnamese",
+    "price": 55000,
+    "rating": 4.7,
+    "reviews": 412,
+    "photo": "https://images.unsplash.com/photo-1631709497146-a239ef373cf1?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 14,
+    "restaurantId": 5,
+    "name": "Lẩu Thái Set",
+    "category": "Asian",
+    "price": 150000,
+    "rating": 4.5,
+    "reviews": 223,
+    "photo": "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=300&h=200&fit=crop"
+  },
+  {
+    "id": 15,
+    "restaurantId": 17,
+    "name": "Xôi Xéo",
+    "category": "Vietnamese",
+    "price": 20000,
+    "rating": 4.6,
+    "reviews": 267,
+    "photo": "https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=300&h=200&fit=crop"
+  }
+]

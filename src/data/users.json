@@ -1,0 +1,10 @@
+[
+  {
+    "user_id": 1,
+    "name": "Customer User",
+    "lat": 21.0278,
+    "lng": 105.8342,
+    "prefs": ["Vietnamese", "Asian"],
+    "history": [1, 3, 6, 12, 20]
+  }
+]
