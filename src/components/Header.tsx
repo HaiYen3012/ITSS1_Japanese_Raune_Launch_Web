@@ -1,14 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, User } from 'lucide-react';
+import { Search, MapPin, User, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 interface HeaderProps {
   location?: string;
   userName?: string;
+  onRefreshLocation?: () => void;
+  isLoadingLocation?: boolean;
+  isFallbackLocation?: boolean;
 }
 
-export function Header({ location = "Hai Bà Trưng, Hanoi", userName = "Customer" }: HeaderProps) {
+export function Header({ 
+  location = "Hai Bà Trưng, Hanoi", 
+  userName = "Customer",
+  onRefreshLocation,
+  isLoadingLocation = false,
+  isFallbackLocation = false,
+}: HeaderProps) {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -50,8 +59,20 @@ export function Header({ location = "Hai Bà Trưng, Hanoi", userName = "Custome
           <div className="flex items-center space-x-4">
             {/* Location */}
             <div className="hidden lg:flex items-center space-x-2 text-sm">
-              <MapPin className="w-4 h-4 text-accent" />
+              <MapPin className={`w-4 h-4 ${isFallbackLocation ? 'text-yellow-500' : 'text-accent'}`} />
               <span className="text-muted-foreground">{location}</span>
+              {onRefreshLocation && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={onRefreshLocation}
+                  disabled={isLoadingLocation}
+                  title="Làm mới vị trí"
+                >
+                  <RefreshCw className={`w-3 h-3 ${isLoadingLocation ? 'animate-spin' : ''}`} />
+                </Button>
+              )}
             </div>
 
             {/* Search button */}

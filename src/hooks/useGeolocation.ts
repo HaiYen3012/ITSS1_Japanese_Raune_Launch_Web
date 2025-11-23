@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 const HANOI_FALLBACK = {
   lat: 21.0278,
@@ -22,7 +22,9 @@ export function useGeolocation() {
     isFallback: true,
   });
 
-  useEffect(() => {
+  const [watchId, setWatchId] = useState<number | null>(null);
+
+  const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setLocation({
         ...HANOI_FALLBACK,
@@ -32,6 +34,8 @@ export function useGeolocation() {
       });
       return;
     }
+
+    setLocation((prev) => ({ ...prev, loading: true }));
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -53,12 +57,61 @@ export function useGeolocation() {
         });
       },
       {
-        enableHighAccuracy: false,
-        timeout: 5000,
+        enableHighAccuracy: true,
+        timeout: 10000,
         maximumAge: 0,
       }
     );
   }, []);
 
-  return location;
+  const startWatchingPosition = useCallback(() => {
+    if (!navigator.geolocation || watchId !== null) return;
+
+    const id = navigator.geolocation.watchPosition(
+      (position) => {
+        setLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          loading: false,
+          error: null,
+          isFallback: false,
+        });
+      },
+      (error) => {
+        console.warn('Geolocation watch error:', error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 30000,
+      }
+    );
+
+    setWatchId(id);
+  }, [watchId]);
+
+  const stopWatchingPosition = useCallback(() => {
+    if (watchId !== null) {
+      navigator.geolocation.clearWatch(watchId);
+      setWatchId(null);
+    }
+  }, [watchId]);
+
+  useEffect(() => {
+    getCurrentLocation();
+
+    return () => {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+  }, []);
+
+  return {
+    ...location,
+    refreshLocation: getCurrentLocation,
+    startWatching: startWatchingPosition,
+    stopWatching: stopWatchingPosition,
+    isWatching: watchId !== null,
+  };
 }

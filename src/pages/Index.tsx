@@ -2,12 +2,13 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { DishCard } from '@/components/DishCard';
 import { RestaurantLogo } from '@/components/RestaurantLogo';
+import { LocationMap } from '@/components/LocationMap';
 import { Button } from '@/components/ui/button';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { useRecommendations } from '@/hooks/useRecommendations';
 import { formatDistance } from '@/utils/distance';
 import { useNavigate } from 'react-router-dom';
-import { Truck, Star, Leaf, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
+import { Truck, Star, Leaf, ChevronLeft, ChevronRight, AlertCircle, RefreshCw } from 'lucide-react';
 import restaurantsData from '@/data/restaurants.json';
 import { useRef } from 'react';
 
@@ -16,6 +17,10 @@ const Index = () => {
   const location = useGeolocation();
   const recommendations = useRecommendations(location.lat, location.lng);
   const restaurantScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleRefreshLocation = () => {
+    location.refreshLocation();
+  };
 
   const scrollRestaurants = (direction: 'left' | 'right') => {
     if (restaurantScrollRef.current) {
@@ -30,8 +35,11 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header
-        location={location.isFallback ? "Hai Bà Trưng, Hanoi (default)" : "Your location"}
-        userName="Customer"
+        location={location.isFallback ? "Hai Bà Trưng, Hanoi (mặc định)" : "Vị trí của bạn"}
+        userName="Khách hàng"
+        onRefreshLocation={handleRefreshLocation}
+        isLoadingLocation={location.loading}
+        isFallbackLocation={location.isFallback}
       />
 
       {/* Hero Section */}
@@ -41,19 +49,31 @@ const Index = () => {
           {location.isFallback && (
             <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg flex items-start space-x-3">
               <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-yellow-800">
-                <p className="font-medium">Enable location for better recommendations!</p>
-                <p className="text-xs mt-1">We're showing results for Hanoi by default.</p>
+              <div className="flex-1">
+                <div className="text-sm text-yellow-800">
+                  <p className="font-medium">Bật định vị để nhận gợi ý tốt hơn!</p>
+                  <p className="text-xs mt-1">Chúng tôi đang hiển thị kết quả cho Hà Nội theo mặc định.</p>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRefreshLocation}
+                  className="mt-2 text-xs"
+                  disabled={location.loading}
+                >
+                  <RefreshCw className={`w-3 h-3 mr-1 ${location.loading ? 'animate-spin' : ''}`} />
+                  Thử lại
+                </Button>
               </div>
             </div>
           )}
 
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Raune Launch: Quick & Easy Meals Delivered Fast!
+              Raune Launch: Đặt món nhanh & tiện lợi!
             </h1>
             <p className="text-lg text-muted-foreground mb-8">
-              Discover delicious dishes from the best restaurants near you
+              Khám phá những món ăn ngon từ các nhà hàng tốt nhất gần bạn
             </p>
 
             {/* Action Buttons */}
@@ -63,7 +83,7 @@ const Index = () => {
                 onClick={() => navigate('/search')}
                 className="text-lg"
               >
-                Search Restaurants
+                Tìm nhà hàng
               </Button>
               <Button
                 size="lg"
@@ -74,7 +94,7 @@ const Index = () => {
                   });
                 }}
               >
-                View Nearby
+                Xem gần đây
               </Button>
             </div>
 
@@ -84,22 +104,22 @@ const Index = () => {
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Truck className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <h3 className="font-semibold text-foreground">Speedy Delivery</h3>
-                <p className="text-sm text-muted-foreground">Fast delivery to your door</p>
+                <h3 className="font-semibold text-foreground">Giao hàng nhanh</h3>
+                <p className="text-sm text-muted-foreground">Giao hàng tận nơi nhanh chóng</p>
               </div>
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Star className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <h3 className="font-semibold text-foreground">High Quality</h3>
-                <p className="text-sm text-muted-foreground">Top-rated restaurants</p>
+                <h3 className="font-semibold text-foreground">Chất lượng cao</h3>
+                <p className="text-sm text-muted-foreground">Nhà hàng được đánh giá cao</p>
               </div>
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Leaf className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <h3 className="font-semibold text-foreground">Nutritious</h3>
-                <p className="text-sm text-muted-foreground">Fresh & healthy options</p>
+                <h3 className="font-semibold text-foreground">Dinh dưỡng</h3>
+                <p className="text-sm text-muted-foreground">Món ăn tươi ngon & lành mạnh</p>
               </div>
             </div>
           </div>
@@ -110,12 +130,12 @@ const Index = () => {
       <section id="recommendations-dishes" className="py-12 bg-background">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold text-foreground">Recommended Dishes</h2>
+            <h2 className="text-3xl font-bold text-foreground">Món ăn được đề xuất</h2>
             <Button
               variant="ghost"
               onClick={() => navigate('/search?sort=rating')}
             >
-              See More
+              Xem thêm
             </Button>
           </div>
 
@@ -148,12 +168,12 @@ const Index = () => {
       <section id="recommendations-restaurants" className="py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-3xl font-bold text-foreground">Top Restaurants Near You</h2>
+            <h2 className="text-3xl font-bold text-foreground">Nhà hàng hàng đầu gần bạn</h2>
             <Button
               variant="ghost"
               onClick={() => navigate('/search?sort=closest')}
             >
-              View All
+              Xem tất cả
             </Button>
           </div>
 
@@ -194,6 +214,25 @@ const Index = () => {
               </div>
             )}
           </div>
+        </div>
+      </section>
+
+      {/* Location Map Section */}
+      <section className="py-12 bg-background">
+        <div className="container mx-auto px-4">
+          <LocationMap
+            userLat={location.lat}
+            userLng={location.lng}
+            restaurants={recommendations.restaurants.map(({ restaurant, distance }) => ({
+              id: restaurant.id,
+              name: restaurant.name,
+              lat: restaurant.lat,
+              lng: restaurant.lng,
+              distance,
+            }))}
+            onRefreshLocation={handleRefreshLocation}
+            isLoadingLocation={location.loading}
+          />
         </div>
       </section>
 

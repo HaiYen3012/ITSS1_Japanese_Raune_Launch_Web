@@ -35,9 +35,9 @@ interface RecommendationScore {
   score: number;
 }
 
-const MAX_DISTANCE_KM = 3;
+const MAX_DISTANCE_KM = 10;
 
-export function useRecommendations(userLat: number, userLng: number) {
+export function useRecommendations(userLat: number, userLng: number, maxDistance: number = MAX_DISTANCE_KM) {
   const user = usersData[0]; // Mock logged-in user
 
   const recommendedDishes = useMemo(() => {
@@ -58,7 +58,7 @@ export function useRecommendations(userLat: number, userLng: number) {
         );
 
         // Skip if too far
-        if (distance > MAX_DISTANCE_KM) return null;
+        if (distance > maxDistance) return null;
 
         // Calculate score
         let score = 0;
@@ -72,7 +72,7 @@ export function useRecommendations(userLat: number, userLng: number) {
         score += menu.rating;
 
         // Distance penalty (closer is better)
-        score += (MAX_DISTANCE_KM - distance) * 2;
+        score += (maxDistance - distance) * 2;
 
         // History bonus (previously ordered)
         if (user.history.includes(restaurant.id)) {
@@ -106,7 +106,7 @@ export function useRecommendations(userLat: number, userLng: number) {
         );
 
         // Skip if too far
-        if (distance > MAX_DISTANCE_KM) return null;
+        if (distance > maxDistance) return null;
 
         let score = 0;
 
@@ -119,7 +119,7 @@ export function useRecommendations(userLat: number, userLng: number) {
         score += restaurant.rating * 2;
 
         // Distance bonus
-        score += (MAX_DISTANCE_KM - distance) * 2;
+        score += (maxDistance - distance) * 2;
 
         // History bonus
         if (user.history.includes(restaurant.id)) {
@@ -137,7 +137,7 @@ export function useRecommendations(userLat: number, userLng: number) {
       .slice(0, 7);
 
     return scored;
-  }, [userLat, userLng]);
+  }, [userLat, userLng, maxDistance]);
 
   return {
     dishes: recommendedDishes,
