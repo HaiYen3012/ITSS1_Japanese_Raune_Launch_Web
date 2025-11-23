@@ -9,7 +9,7 @@ export function Footer() {
           <div className="text-center md:text-left">
             <h3 className="font-bold text-xl mb-1">Raune Launch</h3>
             <p className="text-sm opacity-90">Quick & Easy Meals Delivered Fast</p>
-            <p className="text-xs opacity-75 mt-2">Built by Team X, Class Y</p>
+            <p className="text-xs opacity-75 mt-2">Built by Team 派手, Class ITSS-1 木2</p>
           </div>
 
           {/* Social Links */}
