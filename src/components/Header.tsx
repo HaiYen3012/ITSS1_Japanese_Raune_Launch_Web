@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, MapPin, User, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
@@ -21,6 +21,7 @@ export function Header({
   isFallbackLocation = false,
 }: HeaderProps) {
   const navigate = useNavigate();
+  const currentLocation = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const { t } = useLanguage();
 
@@ -28,6 +29,25 @@ export function Header({
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
+  const handleRecommendationsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (currentLocation.pathname === '/search') {
+      // Nếu đang ở trang search, chuyển về home rồi scroll
+      navigate('/');
+      // Đợi một chút để trang home render xong rồi mới scroll
+      setTimeout(() => {
+        document.getElementById('recommendations-dishes')?.scrollIntoView({
+          behavior: 'smooth',
+        });
+      }, 100);
+    } else {
+      // Nếu đang ở trang home, chỉ cần scroll
+      document.getElementById('recommendations-dishes')?.scrollIntoView({
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -53,9 +73,12 @@ export function Header({
             <Link to="/search" className="text-foreground hover:text-primary transition-colors">
               {t('header.search')}
             </Link>
-            <a href="#recommendations-dishes" className="text-foreground hover:text-primary transition-colors">
-              {t('header.recommendations')}
-            </a>
+            <button
+              onClick={handleRecommendationsClick}
+              className="text-foreground hover:text-primary transition-colors cursor-pointer"
+            >
+              Recommendations
+            </button>
           </nav>
 
           {/* Right section */}
