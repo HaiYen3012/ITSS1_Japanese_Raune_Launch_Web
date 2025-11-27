@@ -47,13 +47,29 @@ const Search = () => {
 
     // Apply search query with flexible Vietnamese accent matching
     if (searchQuery) {
-      results = results.filter(
-        (r) =>
+      results = results.filter((r) => {
+        // Kiểm tra tên nhà hàng, category, address, tags
+        const restaurantMatch = 
           flexibleMatch(r.name, searchQuery) ||
           flexibleMatch(r.category, searchQuery) ||
           flexibleMatch(r.address, searchQuery) ||
-          r.tags.some((tag) => flexibleMatch(tag, searchQuery))
-      );
+          r.tags.some((tag) => flexibleMatch(tag, searchQuery));
+        
+        // Kiểm tra tên món ăn (cả tiếng Việt và tiếng Nhật)
+        const dishMatch = menusData.some((d) => {
+          if (d.restaurantId !== r.id) return false;
+          
+          const dishNameMatch = typeof d.name === 'string' 
+            ? flexibleMatch(d.name, searchQuery)
+            : (flexibleMatch(d.name.vi, searchQuery) || 
+               flexibleMatch(d.name.ja, searchQuery) ||
+               d.name.ja.includes(searchQuery));
+          
+          return dishNameMatch || flexibleMatch(d.category, searchQuery);
+        });
+        
+        return restaurantMatch || dishMatch;
+      });
     }
 
     // Apply category filter
@@ -71,10 +87,12 @@ const Search = () => {
       // Filter dishes by search query if exists (with flexible matching)
       if (searchQuery) {
         const matchingDishes = dishes.filter((d) => {
-          // Kiểm tra tên món ăn
+          // Kiểm tra tên món ăn (hỗ trợ cả tiếng Việt và tiếng Nhật)
           const dishNameMatch = typeof d.name === 'string' 
             ? flexibleMatch(d.name, searchQuery)
-            : flexibleMatch(d.name.vi, searchQuery) || flexibleMatch(d.name.ja, searchQuery);
+            : (flexibleMatch(d.name.vi, searchQuery) || 
+               flexibleMatch(d.name.ja, searchQuery) ||
+               d.name.ja.includes(searchQuery)); // Thêm tìm kiếm trực tiếp cho tiếng Nhật
           
           return dishNameMatch || flexibleMatch(d.category, searchQuery);
         });
