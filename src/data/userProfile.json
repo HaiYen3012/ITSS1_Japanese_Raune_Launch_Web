@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "username": "nguyenvana",
+    "name": "Nguyen Van A",
+    "email": "abc.rauma@gmail.com",
+    "password": "password123",
+    "profileImage": "/profile-image/avt1.jpg"
+  },
+  {
+    "id": 2,
+    "username": "tranthib",
+    "name": "Tran Thi B",
+    "email": "tranthi.b@example.com",
+    "password": "password123",
+    "profileImage": "/profile-image/avt2.jpg"
+  },
+  {
+    "id": 3,
+    "username": "levanc",
+    "name": "Le Van C",
+    "email": "levan.c@example.com",
+    "password": "password123",
+    "profileImage": "/profile-image/avt3.jpg"
+  }
+]
+
