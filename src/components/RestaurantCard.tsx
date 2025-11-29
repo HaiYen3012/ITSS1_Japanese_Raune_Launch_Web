@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Star, MapPin, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useNavigate } from 'react-router-dom';
 
 interface Dish {
   id: number;
@@ -39,6 +40,7 @@ export function RestaurantCard({
 }: RestaurantCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
 
   // Hàm helper để lấy tên món ăn theo ngôn ngữ
   const getDishName = (dishName: string | { vi: string; ja: string }) => {
@@ -50,14 +52,24 @@ export function RestaurantCard({
 
   return (
     <div className="bg-card rounded-xl border border-border hover:shadow-md transition-all duration-300 overflow-hidden">
-      <img
-        src={photo}
-        alt={name}
-        className="w-full h-48 object-cover"
-        loading="lazy"
-      />
+      <div 
+        className="cursor-pointer"
+        onClick={() => navigate(`/restaurant/${id}`)}
+      >
+        <img
+          src={photo}
+          alt={name}
+          className="w-full h-48 object-cover"
+          loading="lazy"
+        />
+      </div>
       <div className="p-4">
-        <h3 className="font-bold text-lg text-card-foreground">{name}</h3>
+        <h3 
+          className="font-bold text-lg text-card-foreground cursor-pointer hover:text-primary transition-colors"
+          onClick={() => navigate(`/restaurant/${id}`)}
+        >
+          {name}
+        </h3>
         <div className="flex items-start space-x-1 text-sm text-muted-foreground mt-1">
           <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <p className="line-clamp-1">{address}</p>

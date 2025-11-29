@@ -1,6 +1,7 @@
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { DishCard } from '@/components/DishCard';
+import { DishDetailDialog } from '@/components/DishDetailDialog';
 import { RestaurantLogo } from '@/components/RestaurantLogo';
 import { LocationMap } from '@/components/LocationMap';
 import { Button } from '@/components/ui/button';
@@ -10,7 +11,8 @@ import { formatDistance } from '@/utils/distance';
 import { useNavigate } from 'react-router-dom';
 import { Truck, Star, Leaf, ChevronLeft, ChevronRight, AlertCircle, RefreshCw } from 'lucide-react';
 import restaurantsData from '@/data/restaurants.json';
-import { useRef } from 'react';
+import menusData from '@/data/menus.json';
+import { useRef, useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 
 const Index = () => {
@@ -19,6 +21,7 @@ const Index = () => {
   const recommendations = useRecommendations(location.lat, location.lng);
   const restaurantScrollRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+  const [selectedDish, setSelectedDish] = useState<{ dish: any; restaurant: any } | null>(null);
 
   const handleRefreshLocation = () => {
     location.refreshLocation();
@@ -151,13 +154,16 @@ const Index = () => {
                 menu && (
                   <DishCard
                     key={menu.id}
+                    dishId={menu.id}
                     name={menu.name}
                     restaurantName={restaurant.name}
+                    restaurantId={restaurant.id}
                     distance={formatDistance(distance)}
                     rating={menu.rating}
                     reviews={menu.reviews}
                     price={menu.price}
                     photo={menu.photo}
+                    onViewDetails={() => setSelectedDish({ dish: menu, restaurant })}
                   />
                 )
               ))}
@@ -209,6 +215,7 @@ const Index = () => {
                 {recommendations.restaurants.map(({ restaurant }) => (
                   <RestaurantLogo
                     key={restaurant.id}
+                    id={restaurant.id}
                     name={restaurant.name}
                     photo={restaurant.photo}
                   />
@@ -239,6 +246,16 @@ const Index = () => {
       </section>
 
       <Footer />
+
+      {/* Dish Detail Dialog */}
+      {selectedDish && (
+        <DishDetailDialog
+          open={!!selectedDish}
+          onOpenChange={(open) => !open && setSelectedDish(null)}
+          dish={selectedDish.dish}
+          restaurant={selectedDish.restaurant}
+        />
+      )}
     </div>
   );
 };
