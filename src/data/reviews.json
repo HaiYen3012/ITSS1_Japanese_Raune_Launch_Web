@@ -1,0 +1,278 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "type": "restaurant",
+    "targetId": 1,
+    "rating": 5,
+    "comment": "Nhà hàng rất ngon, đồ ăn tươi ngon. Mình hay đến đây ăn, nhân viên phục vụ nhiệt tình.",
+    "createdAt": "2024-11-20T10:30:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "type": "restaurant",
+    "targetId": 1,
+    "rating": 4,
+    "comment": "Quán sạch sẽ, món ăn ngon nhưng hơi đông người. Không gian thoải mái.",
+    "createdAt": "2024-11-18T14:20:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 3,
+    "userId": 3,
+    "type": "restaurant",
+    "targetId": 1,
+    "rating": 5,
+    "comment": "Trải nghiệm tuyệt vời! Sẽ quay lại lần sau. Giá cả hợp lý.",
+    "createdAt": "2024-11-15T09:15:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 4,
+    "userId": 2,
+    "type": "dish",
+    "targetId": 1,
+    "rating": 5,
+    "comment": "Phở rất ngon, nước dùng đậm đà, thịt bò tươi. Đúng chuẩn phở Hà Nội.",
+    "createdAt": "2024-11-10T16:45:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 5,
+    "userId": 3,
+    "type": "dish",
+    "targetId": 2,
+    "rating": 4,
+    "comment": "Bún chả ngon, thịt nướng vừa ăn. Nước mắm pha chuẩn vị.",
+    "createdAt": "2024-11-12T11:20:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 6,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 3,
+    "rating": 3,
+    "comment": "Bánh mì bình thường, không có gì đặc biệt lắm.",
+    "createdAt": "2024-11-08T08:30:00Z",
+    "updatedAt": "2024-11-09T10:15:00Z",
+    "isEdited": true
+  },
+  {
+    "id": 7,
+    "userId": 2,
+    "type": "restaurant",
+    "targetId": 2,
+    "rating": 4,
+    "comment": "Nhà hàng sạch sẽ, phục vụ nhanh. Món ăn đa dạng.",
+    "createdAt": "2024-11-05T15:40:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 8,
+    "userId": 3,
+    "type": "restaurant",
+    "targetId": 2,
+    "rating": 5,
+    "comment": "Rất hài lòng với chất lượng phục vụ. Sẽ giới thiệu bạn bè.",
+    "createdAt": "2024-11-03T12:10:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 9,
+    "userId": 1,
+    "type": "restaurant",
+    "targetId": 2,
+    "rating": 5,
+    "comment": "Quán ăn Việt Nam tuyệt vời! Không gian đẹp, món ăn đa dạng và ngon. Giá cả hợp lý, sẽ quay lại nhiều lần.",
+    "createdAt": "2024-11-25T14:15:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 10,
+    "userId": 1,
+    "type": "restaurant",
+    "targetId": 3,
+    "rating": 4,
+    "comment": "Nhà hàng Nhật Bản chất lượng cao. Sushi tươi ngon, nhân viên chuyên nghiệp. Giá hơi cao nhưng xứng đáng.",
+    "createdAt": "2024-11-22T18:30:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 11,
+    "userId": 1,
+    "type": "restaurant",
+    "targetId": 5,
+    "rating": 5,
+    "comment": "Pizza Ý ngon tuyệt! Đế bánh giòn tan, nhân đầy đủ. Không gian ấm cúng, phù hợp cho gia đình.",
+    "createdAt": "2024-11-19T20:00:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 12,
+    "userId": 1,
+    "type": "restaurant",
+    "targetId": 7,
+    "rating": 4,
+    "comment": "Quán cà phê yên tĩnh, view đẹp. Cà phê thơm ngon, bánh ngọt tươi. Giá hơi cao nhưng không gian đáng giá.",
+    "createdAt": "2024-11-17T10:45:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 13,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 1,
+    "rating": 5,
+    "comment": "Phở bò tái tuyệt vời! Nước dùng trong, thơm, thịt bò mềm. Đây là món phở ngon nhất tôi từng ăn.",
+    "createdAt": "2024-11-26T08:00:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 14,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 2,
+    "rating": 5,
+    "comment": "Bún chả Hà Nội chuẩn vị! Thịt nướng thơm, bún mềm, nước mắm pha vừa miệng. Rất đáng thử!",
+    "createdAt": "2024-11-24T12:30:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 15,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 4,
+    "rating": 4,
+    "comment": "Gỏi cuốn tươi ngon, rau sống tươi mát. Nước chấm đậm đà. Phần ăn vừa đủ.",
+    "createdAt": "2024-11-23T11:15:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 16,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 5,
+    "rating": 5,
+    "comment": "Cơm tấm sườn nướng ngon xuất sắc! Sườn mềm, thơm, cơm dẻo. Kèm đồ chua và nước mắm rất hợp.",
+    "createdAt": "2024-11-21T13:00:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 17,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 9,
+    "rating": 5,
+    "comment": "Pizza Margherita tuyệt hảo! Đế bánh giòn, phô mai tan chảy, sốt cà chua tươi. Món Ý chính thống!",
+    "createdAt": "2024-11-20T19:30:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 18,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 10,
+    "rating": 4,
+    "comment": "Pasta Carbonara béo ngậy, mì al dente vừa phải. Bacon giòn thơm. Khẩu phần hơi nhỏ.",
+    "createdAt": "2024-11-18T20:15:00Z",
+    "updatedAt": "2024-11-19T09:00:00Z",
+    "isEdited": true
+  },
+  {
+    "id": 19,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 13,
+    "rating": 5,
+    "comment": "Sushi cá hồi tươi ngon tuyệt vời! Cá tươi, cơm nắm vừa tay. Wasabi và gừng ngâm chất lượng cao.",
+    "createdAt": "2024-11-16T18:45:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 20,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 14,
+    "rating": 4,
+    "comment": "Ramen Tonkotsu đậm đà, nước dùng béo ngậy. Mì dai, thịt xá xíu mềm. Trứng lòng đào hoàn hảo.",
+    "createdAt": "2024-11-15T19:20:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 21,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 17,
+    "rating": 5,
+    "comment": "Pad Thai ngon tuyệt! Mì xào vừa miệng, tôm tươi, đậu phộng giòn. Vị chua ngọt cay hài hòa.",
+    "createdAt": "2024-11-14T12:00:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 22,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 21,
+    "rating": 4,
+    "comment": "Burger bò Úc ngon, thịt mọng nước, rau tươi. Bánh mì mềm thơm. Khoai tây chiên giòn rụm.",
+    "createdAt": "2024-11-13T17:30:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 23,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 25,
+    "rating": 5,
+    "comment": "Cà phê sữa đá đậm đà, thơm ngon. Độ ngọt vừa phải, đá mát lạnh. Giá cả phải chăng.",
+    "createdAt": "2024-11-12T09:30:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 24,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 29,
+    "rating": 4,
+    "comment": "Lẩu Thái chua cay vừa phải, hải sản tươi ngon. Rau nấm đa dạng. Nước lẩu thơm ngon.",
+    "createdAt": "2024-11-11T18:00:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  },
+  {
+    "id": 25,
+    "userId": 1,
+    "type": "dish",
+    "targetId": 33,
+    "rating": 5,
+    "comment": "Gà rán KFC giòn tan, thịt mềm ngọt. Vị cay vừa phải. Combo với khoai tây nghiền rất ngon.",
+    "createdAt": "2024-11-10T16:15:00Z",
+    "updatedAt": null,
+    "isEdited": false
+  }
+]
+
