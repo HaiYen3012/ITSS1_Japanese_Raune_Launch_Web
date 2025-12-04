@@ -4,8 +4,7 @@ import accountsData from '@/data/accounts.json';
  * Interface cho UserProfile
  * @typedef {Object} UserProfile
  * @property {number} id - ID của user
- * @property {string} username - Tên đăng nhập của user
- * @property {string} name - Tên của user
+ * @property {string} username - Tên người dùng
  * @property {string} email - Email của user
  * @property {string} password - Mật khẩu của user
  * @property {string} profileImage - Đường dẫn ảnh đại diện
@@ -13,6 +12,28 @@ import accountsData from '@/data/accounts.json';
 
 const STORAGE_KEY_SESSION = 'userSession';
 const STORAGE_KEY_ACCOUNTS = 'accounts';
+const STORAGE_KEY_INITIALIZED = 'accountsInitialized';
+
+/**
+ * Khởi tạo accounts từ accounts.json vào localStorage (chỉ chạy 1 lần)
+ * @returns {void}
+ */
+export const initializeAccounts = () => {
+  try {
+    // Kiểm tra xem đã khởi tạo chưa
+    const isInitialized = localStorage.getItem(STORAGE_KEY_INITIALIZED);
+    if (isInitialized === 'true') {
+      return; // Đã khởi tạo rồi, không làm gì
+    }
+
+    // Copy accounts từ JSON vào localStorage
+    localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(accountsData));
+    localStorage.setItem(STORAGE_KEY_INITIALIZED, 'true');
+    console.log('Accounts initialized from accounts.json to localStorage');
+  } catch (error) {
+    console.error('Error initializing accounts:', error);
+  }
+};
 
 /**
  * Lấy account hiện tại từ session
@@ -39,26 +60,21 @@ export const getCurrentAccountFromSession = () => {
 };
 
 /**
- * Lấy tất cả accounts (từ JSON + localStorage)
+ * Lấy tất cả accounts từ localStorage
  */
 export const getAllAccounts = () => {
   try {
-    // Get accounts from localStorage
+    // Đảm bảo đã khởi tạo
+    initializeAccounts();
+    
+    // Get accounts from localStorage only
     const localAccountsStr = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
     const localAccounts = localAccountsStr ? JSON.parse(localAccountsStr) : [];
     
-    // Merge with accounts from JSON (avoid duplicates)
-    const allAccounts = [...accountsData];
-    localAccounts.forEach(localAcc => {
-      if (!allAccounts.find(acc => acc.id === localAcc.id)) {
-        allAccounts.push(localAcc);
-      }
-    });
-    
-    return allAccounts;
+    return localAccounts;
   } catch (error) {
     console.error('Error getting all accounts:', error);
-    return accountsData;
+    return [];
   }
 };
 
@@ -67,10 +83,13 @@ export const getAllAccounts = () => {
  * @returns {UserProfile} Profile hiện tại
  */
 export const getCurrentProfile = () => {
+  // Đảm bảo đã khởi tạo
+  initializeAccounts();
+  
   const session = getCurrentAccountFromSession();
   
   if (session && session.userId) {
-    // Find account by userId
+    // Find account by userId từ localStorage
     const allAccounts = getAllAccounts();
     const account = allAccounts.find(acc => acc.id === session.userId);
     
@@ -78,7 +97,6 @@ export const getCurrentProfile = () => {
       return {
         id: account.id,
         username: account.username || '',
-        name: account.name || '',
         email: account.email || '',
         password: account.password || '',
         profileImage: account.profileImage || '/profile-image/avt1.jpg',
@@ -90,19 +108,34 @@ export const getCurrentProfile = () => {
     }
   }
   
-  // Fallback: return first account from JSON
-  const firstAccount = accountsData[0];
+  // Fallback: return first account from localStorage
+  const allAccounts = getAllAccounts();
+  if (allAccounts.length > 0) {
+    const firstAccount = allAccounts[0];
+    return {
+      id: firstAccount.id,
+      username: firstAccount.username || '',
+      email: firstAccount.email || '',
+      password: firstAccount.password || '',
+      profileImage: firstAccount.profileImage || '/profile-image/avt1.jpg',
+      lat: firstAccount.lat,
+      lng: firstAccount.lng,
+      prefs: firstAccount.prefs || [],
+      history: firstAccount.history || []
+    };
+  }
+  
+  // Nếu không có account nào, trả về object rỗng
   return {
-    id: firstAccount.id,
-    username: firstAccount.username || '',
-    name: firstAccount.name || '',
-    email: firstAccount.email || '',
-    password: firstAccount.password || '',
-    profileImage: firstAccount.profileImage || '/profile-image/avt1.jpg',
-    lat: firstAccount.lat,
-    lng: firstAccount.lng,
-    prefs: firstAccount.prefs || [],
-    history: firstAccount.history || []
+    id: 0,
+    username: '',
+    email: '',
+    password: '',
+    profileImage: '/profile-image/avt1.jpg',
+    lat: undefined,
+    lng: undefined,
+    prefs: [],
+    history: []
   };
 };
 
@@ -112,40 +145,37 @@ export const getCurrentProfile = () => {
  */
 export const saveProfileToStorage = (profile) => {
   try {
-    // Get all accounts (from JSON + localStorage)
+    // Đảm bảo đã khởi tạo
+    initializeAccounts();
+    
+    // Get all accounts from localStorage
     const allAccounts = getAllAccounts();
     
     // Update account in the list
     const accountIndex = allAccounts.findIndex(acc => acc.id === profile.id);
     if (accountIndex !== -1) {
+      // Cập nhật account đã tồn tại
       allAccounts[accountIndex] = {
         ...allAccounts[accountIndex],
         username: profile.username,
-        name: profile.name,
         email: profile.email,
         profileImage: profile.profileImage,
         password: profile.password
       };
-    }
-    
-    // Get only accounts from localStorage (not from JSON)
-    const localAccountsStr = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
-    const localAccounts = localAccountsStr ? JSON.parse(localAccountsStr) : [];
-    
-    // Update or add to localStorage accounts
-    const localIndex = localAccounts.findIndex(acc => acc.id === profile.id);
-    if (localIndex !== -1) {
-      localAccounts[localIndex] = allAccounts[accountIndex];
     } else {
-      // Only add to localStorage if it's not in the original JSON
-      const isInJSON = accountsData.find(acc => acc.id === profile.id);
-      if (!isInJSON) {
-        localAccounts.push(allAccounts[accountIndex]);
-      }
+      // Thêm account mới nếu chưa tồn tại
+      allAccounts.push({
+        ...profile,
+        lat: profile.lat,
+        lng: profile.lng,
+        prefs: profile.prefs || [],
+        history: profile.history || [],
+        createdAt: profile.createdAt || new Date().toISOString()
+      });
     }
     
-    // Save updated local accounts
-    localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(localAccounts));
+    // Save updated accounts to localStorage
+    localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(allAccounts));
     
     // Update session data
     const sessionData = getCurrentAccountFromSession();
@@ -153,7 +183,6 @@ export const saveProfileToStorage = (profile) => {
       const updatedSession = {
         ...sessionData,
         username: profile.username,
-        name: profile.name,
         email: profile.email,
         profileImage: profile.profileImage
       };
@@ -169,23 +198,15 @@ export const saveProfileToStorage = (profile) => {
 
 /**
  * Validate thông tin profile
- * @param {string} username - Username cần validate
- * @param {string} name - Tên cần validate
+ * @param {string} username - Username (tên người dùng) cần validate
  * @param {string} email - Email cần validate
  * @returns {{isValid: boolean, error?: string}} Kết quả validation
  */
-export const validateProfile = (username, name, email) => {
+export const validateProfile = (username, email) => {
   if (!username || !username.trim()) {
     return {
       isValid: false,
       error: 'usernameRequired'
-    };
-  }
-
-  if (!name || !name.trim()) {
-    return {
-      isValid: false,
-      error: 'nameRequired'
     };
   }
 

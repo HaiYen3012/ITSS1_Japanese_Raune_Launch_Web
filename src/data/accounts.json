@@ -1,8 +1,7 @@
 [
   {
     "id": 1,
-    "username": "customer1",
-    "name": "Nguyễn Văn A",
+    "username": "Anh Tùng",
     "email": "customer1@example.com",
     "password": "Password123!",
     "profileImage": "/profile-image/avt1.jpg",
@@ -14,8 +13,7 @@
   },
   {
     "id": 2,
-    "username": "customer2",
-    "name": "Trần Thị B",
+    "username": "Trần Thị B",
     "email": "customer2@example.com",
     "password": "Password456!",
     "profileImage": "/profile-image/avt2.jpg",
@@ -27,10 +25,21 @@
   },
   {
     "id": 3,
-    "username": "newuser",
-    "name": "Lê Văn C",
+    "username": "Lê Văn C",
     "email": "newuser@example.com",
     "password": "NewUser123!",
+    "profileImage": "/profile-image/avt3.jpg",
+    "lat": 21.0290,
+    "lng": 105.8360,
+    "prefs": [],
+    "history": [],
+    "createdAt": "2025-11-28T10:00:00Z"
+  },
+  {
+    "id": 4,
+    "username": "Anh Phúc",
+    "email": "taphuc1@gmail.com",
+    "password": "phuc1234",
     "profileImage": "/profile-image/avt3.jpg",
     "lat": 21.0290,
     "lng": 105.8360,

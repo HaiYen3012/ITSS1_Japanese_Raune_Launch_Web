@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
 import { UserPlus, Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import accountsData from '@/data/accounts.json';
+import { getAllAccounts, initializeAccounts } from '@/utils/profileUtils';
 
 interface FormData {
   username: string;
@@ -110,9 +110,11 @@ const Register = () => {
 
     // Simulate API call delay
     setTimeout(() => {
-      // Get existing accounts from localStorage
-      const localAccounts = JSON.parse(localStorage.getItem('accounts') || '[]');
-      const allAccounts = [...accountsData, ...localAccounts];
+      // Đảm bảo đã khởi tạo accounts
+      initializeAccounts();
+      
+      // Get existing accounts from localStorage only
+      const allAccounts = getAllAccounts();
 
       // Check if email already exists
       const emailExists = allAccounts.some(
@@ -129,27 +131,27 @@ const Register = () => {
         return;
       }
 
-      // Calculate next ID based on all accounts (file + localStorage)
+      // Calculate next ID based on all accounts in localStorage
       const maxId = allAccounts.length > 0 
         ? Math.max(...allAccounts.map(acc => acc.id))
         : 0;
 
-      // In a real app, you would save to backend here
-      // For now, we'll just show success and redirect
+      // Tạo account mới
       const newAccount = {
         id: maxId + 1,
         username: formData.username,
         email: formData.email,
         password: formData.password,
         createdAt: new Date().toISOString(),
+        prefs: [],
+        history: [],
       };
 
-      // In production, this would be sent to backend
       console.log('New account created:', newAccount);
 
-      // Store in localStorage for demo purposes
-      localAccounts.push(newAccount);
-      localStorage.setItem('accounts', JSON.stringify(localAccounts));
+      // Thêm vào danh sách và lưu vào localStorage
+      allAccounts.push(newAccount);
+      localStorage.setItem('accounts', JSON.stringify(allAccounts));
 
       toast({
         title: t('register.registerSuccess'),

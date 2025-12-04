@@ -21,7 +21,6 @@ import {
 interface UserProfile {
   id: number;
   username: string;
-  name: string;
   email: string;
   password: string;
   profileImage: string;
@@ -39,7 +38,6 @@ const Profile: React.FC = () => {
   });
 
   const [username, setUsername] = useState<string>(currentProfile.username || '');
-  const [name, setName] = useState<string>(currentProfile.name || '');
   const [email, setEmail] = useState<string>(currentProfile.email || '');
   const [profileImage, setProfileImage] = useState<string>(
     currentProfile.profileImage || '/profile-image/avt1.jpg'
@@ -52,11 +50,10 @@ const Profile: React.FC = () => {
   const hasChanges = useMemo(() => {
     return (
       username.trim() !== (currentProfile.username || '').trim() ||
-      name.trim() !== (currentProfile.name || '').trim() ||
       email.trim() !== (currentProfile.email || '').trim() ||
       profileImage !== currentProfile.profileImage
     );
-  }, [username, name, email, profileImage, currentProfile]);
+  }, [username, email, profileImage, currentProfile]);
 
   const handleRefreshLocation = (): void => {
     location.refreshLocation();
@@ -68,7 +65,7 @@ const Profile: React.FC = () => {
 
   const handleUpdate = (): void => {
     // Validation
-    const validation = validateProfile(username, name, email);
+    const validation = validateProfile(username, email);
     if (!validation.isValid) {
       toast({
         title: t('profile.validationError') || 'Lỗi',
@@ -81,7 +78,6 @@ const Profile: React.FC = () => {
     const updatedProfile: UserProfile = {
       ...currentProfile,
       username: username.trim(),
-      name: name.trim(),
       email: email.trim(),
       profileImage,
     };
@@ -131,7 +127,7 @@ const Profile: React.FC = () => {
           {/* Component Avatar */}
           <ProfileAvatarSection
             profileImage={profileImage}
-            name={name}
+            name={username}
             onImageChange={handleImageChange}
             availableImages={availableImages}
             t={t}
@@ -139,7 +135,7 @@ const Profile: React.FC = () => {
 
           {/* Form nhập liệu */}
           <div className="space-y-5 mb-9">
-            {/* Trường Username */}
+            {/* Trường Username (Tên người dùng) */}
             <div className="space-y-2.5">
               <Label htmlFor="username" className="text-white text-base font-semibold">
                 {t('profile.username')}
@@ -151,21 +147,6 @@ const Profile: React.FC = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 className="bg-white text-gray-900 rounded-xl h-12 text-sm border-0 shadow-md focus:shadow-lg transition-all duration-200 px-4"
                 placeholder={t('profile.username')}
-              />
-            </div>
-
-            {/* Trường Tên */}
-            <div className="space-y-2.5">
-              <Label htmlFor="name" className="text-white text-base font-semibold">
-                {t('profile.name')}
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="bg-white text-gray-900 rounded-xl h-12 text-sm border-0 shadow-md focus:shadow-lg transition-all duration-200 px-4"
-                placeholder={t('profile.name')}
               />
             </div>
 

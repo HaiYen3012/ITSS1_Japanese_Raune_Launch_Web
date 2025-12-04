@@ -367,7 +367,7 @@
     "emailRequired": "メールアドレスを入力してください",
     "emailInvalid": "メールアドレスが無効です",
     "passwordRequired": "パスワードを入力してください",
-    "loginFailed": "メールアドレスまたはパスワードが正しくありません。",
+    "loginFailed": "ユーザー名/メールアドレスまたはパスワードが正しくありません。",
     "loginSuccess": "ログインに成功しました！",
     "loginSuccessDesc": "ホームページに移動します...",
     "loginSuccessFirstTime": "Raune Launchへようこそ！",

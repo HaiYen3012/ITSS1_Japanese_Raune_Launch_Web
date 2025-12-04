@@ -10,7 +10,6 @@ import { verifyOldPassword, changePassword } from '@/utils/profileUtils';
 interface UserProfile {
   id: number;
   username: string;
-  name: string;
   email: string;
   password: string;
   profileImage: string;

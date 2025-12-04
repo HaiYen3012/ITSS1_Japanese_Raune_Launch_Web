@@ -7,12 +7,11 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
 import { ArrowLeft, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import accountsData from '@/data/accounts.json';
+import { getAllAccounts, initializeAccounts } from '@/utils/profileUtils';
 
 interface Account {
   id: number;
   username: string;
-  name?: string;
   email: string;
   password: string;
   profileImage?: string;
@@ -38,16 +37,6 @@ const Login = () => {
     return emailRegex.test(email);
   };
 
-  // Password validation - must contain letters, numbers, and special characters (except " and ')
-  const validatePassword = (password: string): boolean => {
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};:,.<>?/\\|`~]/.test(password);
-    const noForbiddenChars = !/["']/.test(password);
-    
-    return hasLetter && hasNumber && hasSpecialChar && noForbiddenChars;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -55,7 +44,7 @@ const Login = () => {
     setErrors({});
     
     // Validate email
-    if (!email) {
+    if (!email.trim()) {
       setErrors(prev => ({ ...prev, email: t('login.emailRequired') }));
       return;
     }
@@ -65,14 +54,9 @@ const Login = () => {
       return;
     }
     
-    // Validate password
+    // Validate password - chỉ kiểm tra không rỗng, không validate format
     if (!password) {
       setErrors(prev => ({ ...prev, password: t('login.passwordRequired') }));
-      return;
-    }
-    
-    if (!validatePassword(password)) {
-      setErrors(prev => ({ ...prev, password: t('login.passwordInvalid') }));
       return;
     }
     
@@ -82,33 +66,14 @@ const Login = () => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Check credentials in accounts.json first
-    let account: Account | undefined = accountsData.find(
-      acc => acc.email === email && acc.password === password
+    // Đảm bảo đã khởi tạo accounts
+    initializeAccounts();
+    
+    // Check credentials từ localStorage - chỉ tìm theo email
+    const allAccounts = getAllAccounts();
+    const account: Account | undefined = allAccounts.find(
+      acc => acc.email === email.trim() && acc.password === password
     ) as Account | undefined;
-    
-    console.log('Account from JSON:', account);
-    
-    // If not found in accounts.json, check localStorage for newly registered accounts
-    if (!account) {
-      const registeredAccounts = localStorage.getItem('accounts');
-      console.log('Registered accounts from localStorage:', registeredAccounts);
-      
-      if (registeredAccounts) {
-        try {
-          const accounts: Account[] = JSON.parse(registeredAccounts);
-          console.log('Parsed accounts:', accounts);
-          console.log('Looking for email:', email, 'password:', password);
-          
-          account = accounts.find(
-            (acc) => acc.email === email && acc.password === password
-          );
-          console.log('Found account in localStorage:', account);
-        } catch (error) {
-          console.error('Error parsing registered accounts:', error);
-        }
-      }
-    }
     
     if (!account) {
       setLoading(false);
@@ -126,7 +91,6 @@ const Login = () => {
       userId: account.id,
       email: account.email,
       username: account.username,
-      name: account.name,
       profileImage: account.profileImage,
       loginTime,
       expiresAt: loginTime + (30 * 24 * 60 * 60 * 1000), // 30 days

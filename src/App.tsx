@@ -12,7 +12,11 @@ import RestaurantDetail from "./pages/RestaurantDetail";
 import MyReviews from "./pages/MyReviews";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import { initializeAccounts } from "./utils/profileUtils";
 import "./i18n";
+
+// Khởi tạo accounts từ JSON vào localStorage khi app khởi động
+initializeAccounts();
 
 const queryClient = new QueryClient();
 
