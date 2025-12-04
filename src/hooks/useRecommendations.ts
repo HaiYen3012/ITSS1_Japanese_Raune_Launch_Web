@@ -1,8 +1,9 @@
 import { useMemo } from 'react';
 import restaurantsData from '@/data/restaurants.json';
 import menusData from '@/data/menus.json';
-import usersData from '@/data/users.json';
+import accountsData from '@/data/accounts.json';
 import { calculateDistance } from '@/utils/distance';
+import { getCurrentAccountFromSession } from '@/utils/profileUtils';
 
 interface Restaurant {
   id: number;
@@ -38,7 +39,10 @@ interface RecommendationScore {
 const MAX_DISTANCE_KM = 10;
 
 export function useRecommendations(userLat: number, userLng: number, maxDistance: number = MAX_DISTANCE_KM) {
-  const user = usersData[0]; // Mock logged-in user
+  // Get current user from session or fallback to first account
+  const session = getCurrentAccountFromSession();
+  const userId = session?.userId || 1;
+  const user = accountsData.find(acc => acc.id === userId) || accountsData[0];
 
   const recommendedDishes = useMemo(() => {
     const restaurants = restaurantsData as Restaurant[];
