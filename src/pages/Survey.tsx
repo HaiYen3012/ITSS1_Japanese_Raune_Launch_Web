@@ -212,9 +212,7 @@ const Survey = () => {
                 {t('survey.register')}
               </Button>
               
-              <p className="text-xs text-gray-500 mt-3">
-                {t('survey.canChangelater')}
-              </p>
+             
             </div>
           </div>
         </div>

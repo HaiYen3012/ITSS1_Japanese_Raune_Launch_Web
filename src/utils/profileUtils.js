@@ -1,4 +1,4 @@
-import userProfileData from '@/data/userProfile.json';
+import accountsData from '@/data/accounts.json';
 
 /**
  * Interface cho UserProfile
@@ -11,114 +11,160 @@ import userProfileData from '@/data/userProfile.json';
  * @property {string} profileImage - Đường dẫn ảnh đại diện
  */
 
-const STORAGE_KEY_PROFILES = 'userProfiles';
-const STORAGE_KEY_CURRENT_PROFILE = 'currentUserProfile';
-const STORAGE_KEY_INITIALIZED = 'userProfilesInitialized';
+const STORAGE_KEY_SESSION = 'userSession';
+const STORAGE_KEY_ACCOUNTS = 'accounts';
 
 /**
- * Khởi tạo dữ liệu từ JSON vào localStorage (chỉ chạy 1 lần)
- * Nếu localStorage chưa có dữ liệu, sẽ sync toàn bộ từ file JSON
+ * Lấy account hiện tại từ session
  */
-export const initializeProfilesFromJSON = () => {
-  // Kiểm tra xem đã khởi tạo chưa
-  const isInitialized = localStorage.getItem(STORAGE_KEY_INITIALIZED);
-  
-  if (!isInitialized) {
-    // Lưu toàn bộ profiles từ JSON vào localStorage
-    localStorage.setItem(STORAGE_KEY_PROFILES, JSON.stringify(userProfileData));
+export const getCurrentAccountFromSession = () => {
+  try {
+    const sessionData = localStorage.getItem(STORAGE_KEY_SESSION);
+    if (!sessionData) return null;
     
-    // Set profile đầu tiên làm profile hiện tại
-    const firstProfile = userProfileData[0] || {
-      id: 1,
-      username: '',
-      name: '',
-      email: '',
-      password: '',
-      profileImage: '/profile-image/avt1.jpg'
-    };
-    localStorage.setItem(STORAGE_KEY_CURRENT_PROFILE, JSON.stringify(firstProfile));
+    const session = JSON.parse(sessionData);
     
-    // Đánh dấu đã khởi tạo
-    localStorage.setItem(STORAGE_KEY_INITIALIZED, 'true');
+    // Check if session is still valid
+    const now = new Date().getTime();
+    if (session.expiresAt && now > session.expiresAt) {
+      localStorage.removeItem(STORAGE_KEY_SESSION);
+      return null;
+    }
     
-    return firstProfile;
+    return session;
+  } catch (error) {
+    console.error('Error getting session:', error);
+    return null;
   }
-  
-  return null;
 };
 
 /**
- * Lấy profile hiện tại từ localStorage
- * Nếu chưa có, sẽ khởi tạo từ JSON trước
+ * Lấy tất cả accounts (từ JSON + localStorage)
+ */
+export const getAllAccounts = () => {
+  try {
+    // Get accounts from localStorage
+    const localAccountsStr = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
+    const localAccounts = localAccountsStr ? JSON.parse(localAccountsStr) : [];
+    
+    // Merge with accounts from JSON (avoid duplicates)
+    const allAccounts = [...accountsData];
+    localAccounts.forEach(localAcc => {
+      if (!allAccounts.find(acc => acc.id === localAcc.id)) {
+        allAccounts.push(localAcc);
+      }
+    });
+    
+    return allAccounts;
+  } catch (error) {
+    console.error('Error getting all accounts:', error);
+    return accountsData;
+  }
+};
+
+/**
+ * Lấy profile hiện tại từ session
  * @returns {UserProfile} Profile hiện tại
  */
 export const getCurrentProfile = () => {
-  // Khởi tạo từ JSON nếu chưa có
-  const initialized = initializeProfilesFromJSON();
-  if (initialized) {
-    return initialized;
-  }
+  const session = getCurrentAccountFromSession();
   
-  // Lấy từ localStorage
-  const saved = localStorage.getItem(STORAGE_KEY_CURRENT_PROFILE);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (error) {
-      console.error('Error parsing profile from localStorage:', error);
+  if (session && session.userId) {
+    // Find account by userId
+    const allAccounts = getAllAccounts();
+    const account = allAccounts.find(acc => acc.id === session.userId);
+    
+    if (account) {
+      return {
+        id: account.id,
+        username: account.username || '',
+        name: account.name || '',
+        email: account.email || '',
+        password: account.password || '',
+        profileImage: account.profileImage || '/profile-image/avt1.jpg',
+        lat: account.lat,
+        lng: account.lng,
+        prefs: account.prefs || [],
+        history: account.history || []
+      };
     }
   }
   
-  // Fallback: lấy từ JSON nếu localStorage lỗi
-  return userProfileData[0] || {
-    id: 1,
-    username: '',
-    name: '',
-    email: '',
-    password: '',
-    profileImage: '/profile-image/avt1.jpg'
+  // Fallback: return first account from JSON
+  const firstAccount = accountsData[0];
+  return {
+    id: firstAccount.id,
+    username: firstAccount.username || '',
+    name: firstAccount.name || '',
+    email: firstAccount.email || '',
+    password: firstAccount.password || '',
+    profileImage: firstAccount.profileImage || '/profile-image/avt1.jpg',
+    lat: firstAccount.lat,
+    lng: firstAccount.lng,
+    prefs: firstAccount.prefs || [],
+    history: firstAccount.history || []
   };
 };
 
 /**
- * Lấy tất cả profiles từ localStorage
- * @returns {UserProfile[]} Danh sách profiles
- */
-export const getAllProfiles = () => {
-  const saved = localStorage.getItem(STORAGE_KEY_PROFILES);
-  if (saved) {
-    try {
-      return JSON.parse(saved);
-    } catch (error) {
-      console.error('Error parsing profiles from localStorage:', error);
-    }
-  }
-  
-  // Fallback: trả về từ JSON
-  return userProfileData;
-};
-
-/**
- * Lưu thông tin profile vào localStorage (chỉ khi nhấn nút cập nhật)
+ * Lưu thông tin profile vào localStorage và cập nhật session
  * @param {UserProfile} profile - Profile cần lưu
  */
 export const saveProfileToStorage = (profile) => {
-  // Lấy danh sách profiles hiện tại từ localStorage
-  const allProfiles = getAllProfiles();
-  
-  // Cập nhật profile trong danh sách
-  const updatedProfiles = allProfiles.map(p =>
-    p.id === profile.id ? profile : p
-  );
-
-  // Lưu danh sách profiles đã cập nhật vào localStorage
-  localStorage.setItem(STORAGE_KEY_PROFILES, JSON.stringify(updatedProfiles));
-  
-  // Lưu profile hiện tại vào localStorage
-  localStorage.setItem(STORAGE_KEY_CURRENT_PROFILE, JSON.stringify(profile));
-
-  // Lưu timestamp để biết khi nào cập nhật
-  localStorage.setItem('userProfileLastUpdated', new Date().toISOString());
+  try {
+    // Get all accounts (from JSON + localStorage)
+    const allAccounts = getAllAccounts();
+    
+    // Update account in the list
+    const accountIndex = allAccounts.findIndex(acc => acc.id === profile.id);
+    if (accountIndex !== -1) {
+      allAccounts[accountIndex] = {
+        ...allAccounts[accountIndex],
+        username: profile.username,
+        name: profile.name,
+        email: profile.email,
+        profileImage: profile.profileImage,
+        password: profile.password
+      };
+    }
+    
+    // Get only accounts from localStorage (not from JSON)
+    const localAccountsStr = localStorage.getItem(STORAGE_KEY_ACCOUNTS);
+    const localAccounts = localAccountsStr ? JSON.parse(localAccountsStr) : [];
+    
+    // Update or add to localStorage accounts
+    const localIndex = localAccounts.findIndex(acc => acc.id === profile.id);
+    if (localIndex !== -1) {
+      localAccounts[localIndex] = allAccounts[accountIndex];
+    } else {
+      // Only add to localStorage if it's not in the original JSON
+      const isInJSON = accountsData.find(acc => acc.id === profile.id);
+      if (!isInJSON) {
+        localAccounts.push(allAccounts[accountIndex]);
+      }
+    }
+    
+    // Save updated local accounts
+    localStorage.setItem(STORAGE_KEY_ACCOUNTS, JSON.stringify(localAccounts));
+    
+    // Update session data
+    const sessionData = getCurrentAccountFromSession();
+    if (sessionData && sessionData.userId === profile.id) {
+      const updatedSession = {
+        ...sessionData,
+        username: profile.username,
+        name: profile.name,
+        email: profile.email,
+        profileImage: profile.profileImage
+      };
+      localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(updatedSession));
+    }
+    
+    // Save timestamp
+    localStorage.setItem('userProfileLastUpdated', new Date().toISOString());
+  } catch (error) {
+    console.error('Error saving profile:', error);
+  }
 };
 
 /**

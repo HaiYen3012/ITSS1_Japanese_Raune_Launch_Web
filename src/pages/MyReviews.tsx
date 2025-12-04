@@ -9,7 +9,7 @@ import { Star, MapPin, UtensilsCrossed, Store, Calendar, Edit2 } from 'lucide-re
 import reviewsData from '@/data/reviews.json';
 import restaurantsData from '@/data/restaurants.json';
 import menusData from '@/data/menus.json';
-import usersData from '@/data/users.json';
+import { getCurrentAccountFromSession } from '@/utils/profileUtils';
 
 interface Review {
   id: number;
@@ -27,7 +27,10 @@ const MyReviews = () => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const [reviews, setReviews] = useState<Review[]>([]);
-  const currentUser = usersData[0]; // Current logged in user
+  
+  // Get current user from session
+  const session = getCurrentAccountFromSession();
+  const currentUserId = session?.userId || 1;
 
   // Load reviews from localStorage
   useEffect(() => {
@@ -45,9 +48,9 @@ const MyReviews = () => {
     }
     
     // Filter only current user's reviews
-    const userReviews = allReviews.filter((r) => r.userId === currentUser.id);
+    const userReviews = allReviews.filter((r) => r.userId === currentUserId);
     setReviews(userReviews);
-  }, []);
+  }, [currentUserId]);
 
   // Get restaurant reviews
   const restaurantReviews = reviews.filter((r) => r.type === 'restaurant');

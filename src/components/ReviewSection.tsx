@@ -28,7 +28,7 @@ import { Star, Pencil, Trash2, MessageSquare, Search, UtensilsCrossed } from 'lu
 import { toast } from 'sonner';
 import reviewsData from '@/data/reviews.json';
 import menusData from '@/data/menus.json';
-import usersData from '@/data/users.json';
+import { getCurrentAccountFromSession } from '@/utils/profileUtils';
 
 interface Review {
   id: number;
@@ -67,8 +67,9 @@ export function ReviewSection({ restaurantId, restaurantName }: ReviewSectionPro
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [dishSearchQuery, setDishSearchQuery] = useState('');
 
-  // Current user (giả sử đã đăng nhập)
-  const currentUser = usersData[0];
+  // Get current user from session
+  const session = getCurrentAccountFromSession();
+  const currentUserId = session?.userId || 1;
 
   // Get restaurant dishes
   const restaurantDishes = menusData.filter((m) => m.restaurantId === restaurantId);
@@ -151,12 +152,12 @@ export function ReviewSection({ restaurantId, restaurantName }: ReviewSectionPro
 
   // Check if user already reviewed
   const hasReviewedRestaurant = reviews.some(
-    (r) => r.userId === currentUser.id && r.type === 'restaurant' && r.targetId === restaurantId
+    (r) => r.userId === currentUserId && r.type === 'restaurant' && r.targetId === restaurantId
   );
 
   const hasReviewedDish = (dishId: number) => {
     return reviews.some(
-      (r) => r.userId === currentUser.id && r.type === 'dish' && r.targetId === dishId
+      (r) => r.userId === currentUserId && r.type === 'dish' && r.targetId === dishId
     );
   };
 
@@ -248,7 +249,7 @@ export function ReviewSection({ restaurantId, restaurantName }: ReviewSectionPro
       // Create
       const newReview: Review = {
         id: Math.max(...reviews.map((r) => r.id), 0) + 1,
-        userId: currentUser.id,
+        userId: currentUserId,
         type: reviewType,
         targetId: reviewType === 'restaurant' ? restaurantId : selectedDishId!,
         rating,
@@ -429,8 +430,7 @@ export function ReviewSection({ restaurantId, restaurantName }: ReviewSectionPro
             </div>
           ) : (
             filteredReviews.map((review) => {
-              const user = usersData.find((u) => u.id === review.userId);
-              const isOwner = review.userId === currentUser.id;
+              const isOwner = review.userId === currentUserId;
               const targetName =
                 review.type === 'restaurant' ? restaurantName : getDishName(review.targetId);
 
@@ -442,13 +442,15 @@ export function ReviewSection({ restaurantId, restaurantName }: ReviewSectionPro
                   <div className="flex items-start gap-3">
                     <img
                       src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${review.userId}`}
-                      alt={user?.username || 'User'}
+                      alt={isOwner ? (session?.username || 'User') : `User ${review.userId}`}
                       className="w-12 h-12 rounded-full border-2 border-background"
                     />
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-2">
                         <div>
-                          <span className="font-bold text-foreground">{user?.username}</span>
+                          <span className="font-bold text-foreground">
+                            {isOwner ? (session?.username || t('review.you')) : `User ${review.userId}`}
+                          </span>
                           {review.isEdited && (
                             <span className="text-xs text-muted-foreground ml-2">
                               ({t('review.edited')})
