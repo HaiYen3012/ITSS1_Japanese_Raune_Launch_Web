@@ -69,7 +69,7 @@ export function ReviewSection({ restaurantId, restaurantName }: ReviewSectionPro
 
   // Get current user from session
   const session = getCurrentAccountFromSession();
-  const currentUserId = session?.userId || 1;
+  const currentUserId = session?.userId || -1;
 
   // Get restaurant dishes (recalculated on each render when restaurantId changes)
   const restaurantDishes = menusData.filter((m) => m.restaurantId === restaurantId);
